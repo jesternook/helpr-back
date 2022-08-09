@@ -18,6 +18,7 @@ END
 //
 DELIMITER ;
 
+
 CALL sps_verifica_log_salario(NOW(), "2022-07-29");
 
 DELIMITER //
