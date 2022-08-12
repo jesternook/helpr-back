@@ -1,5 +1,6 @@
 package com.api.helprback.resources.exceptions;
 
+import com.api.helprback.services.exceptions.DataIntegrityViolationException;
 import com.api.helprback.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,16 @@ public class ResourceExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request){
+        StandardError error = new StandardError(
+                System.currentTimeMillis(),
+                HttpStatus.CONFLICT.value(),
+                "Violação de Dados",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }
