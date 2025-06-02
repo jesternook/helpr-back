@@ -6,6 +6,7 @@ import com.api.helprback.domain.dtos.TecnicoDTO;
 import com.api.helprback.services.ChamadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,24 +21,27 @@ public class ChamadoResource {
 
     @Autowired
     private ChamadoService chamadoService;
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
     private ResponseEntity<ChamadoDTO> findById(@PathVariable Integer id){
         Chamado obj = this.chamadoService.findById(id);
         return ResponseEntity.ok().body(new ChamadoDTO(obj));
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ChamadoDTO>> findAll(){
         List<Chamado> list = chamadoService.findAll();
         List<ChamadoDTO> listDto = list.stream().map(obj -> new ChamadoDTO(obj)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ChamadoDTO> create(@Valid @RequestBody ChamadoDTO objDto){
         Chamado obj = chamadoService.create(objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<ChamadoDTO> update(@PathVariable Integer id,@Valid  @RequestBody ChamadoDTO objDto){
         Chamado newObj = chamadoService.update(id, objDto);
